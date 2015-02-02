@@ -19,10 +19,12 @@ Efficient logger for node
 
 ### Usage
 
+```javascript
     var log = require('hw-logger').log;
 
     log.info('hey!');
     log.error('hey!');
+```
 
 ### Performances
 
