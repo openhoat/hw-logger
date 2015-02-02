@@ -9,7 +9,7 @@ Efficient logger for node
 
 - Easy to use : no instance, no factory, common log levels out of the box
 - Easy to configure : configure once with init options, use everywhere in your project
-- Open : override the log output with any event emitter of your own
+- Open : override the log output with any event emitter of your own, add custom log levels
 - Friendly : the log format is customizable with [EJS](http://www.embeddedjs.com/) templates
 - [Expressjs](http://expressjs.com/) compliant : a ready-to-use express middleware is provided (logger.express)
 
@@ -25,8 +25,45 @@ npm install hw-logger
 var log = require('hw-logger').log;
 
 log.info('hey!');
-log.error('hey!');
+log.error('ouch!');
+log.debug('bug bug'); // does nothing : by default the log level is INFO
+log.trace('tssss');
+
 ```
+
+Use logger to customize :
+
+```javascript
+var logger = require('hw-logger');
+  , log = logger.log; // log is immutable
+
+logger.init({ level: 'DEBUG' }); // Initialize the log level
+
+log.info('hey!');
+log.error('ouch!');
+log.debug('bug bug');
+logger.setLevel('TRACE'); // Change the log level
+log.trace('tssss');
+
+```
+
+#### Log levels
+
+Log level is defined by :
+
+- a name used for log messages (uppercase)
+- a matching log method to use (camelcase)
+- a level value used to enable/disable logs (number)
+
+Default log levels are :
+
+- ERROR: 0
+- WARN: 1
+- INFO: 2
+- DEBUG: 3
+- TRACE: 4
+
+Corresponding methods are : error, warn, info, debug, trace
 
 ### Performances
 
