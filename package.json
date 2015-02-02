@@ -1,6 +1,6 @@
 {
   "name": "hw-logger",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "description": "Efficient logger for node",
   "main": "lib/logger.js",
   "scripts": {
