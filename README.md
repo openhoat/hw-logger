@@ -19,7 +19,9 @@ Efficient logger for node
 npm install hw-logger
 ```
 
-### Usage
+### Getting started
+
+Simply use log object to do the job :
 
 ```javascript
 var log = require('hw-logger').log;
@@ -31,7 +33,7 @@ log.trace('tssss');
 
 ```
 
-Use logger to customize :
+Use logger object to configure things :
 
 ```javascript
 var logger = require('hw-logger');
