@@ -30,21 +30,20 @@ log.error('hey!');
 
 ### Performances
 
-
-    # node test/benchmark
+    $ node test/benchmark.js
     Benchmarking 500000 iterations of random string logging using : console,hw-logger,winston,log4js,bunyan
 
     processing console   : .......
     processing hw-logger : ..........
-    processing winston   : ....................
+    processing winston   : .......................
     processing log4js    : ........................................
-    processing bunyan    : ...........................
+    processing bunyan    : ............................
     ###### Benchmark result : ######
-        console	 : 2665ms
-      hw-logger	 : 3245ms
-        winston	 : 5269ms
-         log4js	 : 6780ms
-         bunyan	 : 9137ms
+        console	 : 2668ms
+      hw-logger	 : 3198ms
+        winston	 : 5980ms
+         log4js	 : 6987ms
+         bunyan	 : 9210ms
     ################################
 
 Enjoy !
