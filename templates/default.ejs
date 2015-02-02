@@ -1,0 +1,17 @@
+<%
+var colorMethods, colorMethod, level;
+colorMethods = {
+  ERROR: 'red',
+  WARN:  'yellow',
+  INFO:  'blue',
+  DEBUG: 'bgBlack',
+  TRACE: 'inverse'
+};
+colorMethod = colorMethods[data.level] || 'white';
+level = (data.level + '     ').slice(0, 5);
+%><%- chalk.bold[colorMethod](level) %> - <%
+if (data.caller) {
+%><%- chalk.magenta(path.basename(data.caller, '.js')) %> - <%
+} %><%- data.lastTime ? (function(duration) {
+  return duration > 1000 ? Math.round(duration / 100) / 10 + 's' : duration + 'ms';
+})(data.time.diff(data.lastTime)) : '0ms' %> - <%- util.format.apply(null, data.args) %>
