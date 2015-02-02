@@ -12,7 +12,7 @@ Efficient logger for node
 - Open : override the log output with any event emitter of your own, add custom log levels
 - Friendly : the log format is customizable with [EJS](http://www.embeddedjs.com/) templates
 - [Expressjs](http://expressjs.com/) compliant : a ready-to-use express middleware is provided (logger.express)
-- Efficient : a disabled log level method is dynamically defined to a noop function, it does not consume resource
+- Efficient : a disabled log level method is dynamically defined to a noop function to consume less resources
 
 ### Install
 
