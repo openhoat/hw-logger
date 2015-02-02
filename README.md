@@ -15,7 +15,7 @@ Efficient logger for node
 
 ### Install
 
-```shell
+```sh
 npm install hw-logger
 ```
 
