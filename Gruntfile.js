@@ -39,7 +39,7 @@ module.exports = function (grunt) {
         }
       },
       options: {
-        files: ['test/*.js']
+        files: ['spec/*.js']
       }
     }
   };
