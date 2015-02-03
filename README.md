@@ -218,6 +218,8 @@ Output :
     LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : hello world!
     LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : ouch
 
+To use a template file, use formatFile option instead of format option (template [examples](https://github.com/openhoat/hw-logger/tree/master/templates)).
+
 #### Replace express logger
 
 @TODO
