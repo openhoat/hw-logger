@@ -264,13 +264,33 @@ Just register the express middleware before your routes :
 
 ```javascript
 var logger = require('hw-logger')
+  , log = logger.log
+  , express = require('express');
 
 var app = express();
 app.use(logger.express());
 app.get('/hello', function (req, res) {
   res.send('Hello World!');
 });
+app.listen(3000, function () {
+  log.info('Http server ready');
+});
 ```
+
+Output :
+
+    $ node examples/express.js &
+    INFO  - express:13 - 81ms - Http server ready
+
+    $ curl localhost:3000/hello
+    Hello World!
+    HTTP  - logger:62 - 15s - 127.0.0.1 - GET /hello - 200 - 12
+
+    $ curl localhost:3000/world
+    HTTP  - logger:62 - 51.7s - 127.0.0.1 - GET /world - 404 - 0
+    Cannot GET /world
+
+Express log message format : "<request method> <request path> - <response status code> - <response body length>"
 
 #### Get log output
 
