@@ -7,12 +7,12 @@ Efficient logger for node
 
 ## Why another logger?
 
-- Easy to use : no instance, no factory, common log levels out of the box
+- Easy to use : no instance, no factory, common log levels out of the box, with error only by default for production systems
 - Easy to configure : configure once with init options, use everywhere in your project
-- Open : override the log output with any event emitter of your own, add custom log levels
-- Friendly : the log format is customizable with [EJS](http://www.embeddedjs.com/) templates
+- Open : override the log output with any event emitter of your own, and add custom log levels
+- Friendly : log format is customizable with [EJS](http://www.embeddedjs.com/) templates, w/ or w/o colors
 - [Expressjs](http://expressjs.com/) compliant : a ready-to-use express middleware is provided (logger.express)
-- Efficient : disabled log methods behave like noop function to consume less resources
+- Efficient : disabled log methods behave like noop function, allowing to consume fewer ressources
 
 ### Install
 
@@ -189,6 +189,44 @@ Each log event rendering is based on a data object with useful informations :
 ```
 
 ### Use cases
+
+#### Custom level : [example/customLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/customLevel.js)
+
+```javascript
+var logger = require('hw-logger')
+  , log = logger.log;
+
+logger.registerLevels({
+  IMPORTANT: 1.5,
+  /**
+   *  Current levels are : ERROR, WARN, INFO, DEBUG, TRACE
+   *  with a level value equal to its index (0 to 4).
+   *  Adding a new level with a value of 1.5 will have the effect to insert the new level between values 1 and 2
+   *  After having the new level inserted, the all level values are redefined to reflect indexes of an array
+   */
+  FED_UP: 99 // very high level means very low priority
+});
+
+log.important('hello %s!', 'world');
+log.debug('does nothing');
+log.error('ouch');
+log.fedUp('boring log'); // methods are in camel case
+console.log(logger.getLevels());
+/**
+ *  After having the new level inserted, the all level values are redefined to reflect indexes of an array
+ */
+
+logger.setLevel('fed_up'); // lower or upper case, don't care, but the format has to be snake case for levels
+log.fedUp('boring again'); // now it should display
+```
+
+Output :
+
+    $ node examples/customLevel
+    IMPORTANT - customLevel:15 - 4ms - hello world!
+    ERROR     - customLevel:17 - 2ms - ouch
+    [ 'ERROR', 'WARN', 'IMPORTANT', 'INFO', 'DEBUG', 'TRACE', 'FED_UP' ]
+    FED_UP    - customLevel:25 - 1ms - boring again
 
 #### Custom format : [example/customFormat.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormat.js)
 
