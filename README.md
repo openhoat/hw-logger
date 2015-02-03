@@ -39,9 +39,7 @@ Output :
     ERROR - simple:5 - 1ms - ouch
 
 By default, hw-logger displays source filename and line number (simple:3).
-
 To get those informations hw-logger need to know the caller, and this process is loud.
-
 So, if you don't need to display the caller informations, it's better to set caller property to false in init options.
 
 #### Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
