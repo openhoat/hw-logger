@@ -86,7 +86,9 @@ Corresponding methods are : error, warn, info, debug, trace
 
 #### logger :
 
-##### init(options) : initialize logger with optionnal custom options
+##### init(options)
+
+Initialize logger with optionnal custom options.
 
 Available options :
 
@@ -102,23 +104,57 @@ Available options :
 }
 ```
 
-##### log : @TODO
+##### log
 
-##### getLogMethodName : @TODO
+Log object that provides log methods for all levels.
 
-##### getLevelValue : @TODO
+If logger levels change then log methods are redefined.
 
-##### setLevel : @TODO
+##### getLogMethodName(level)
 
-##### isEnabled : @TODO
+Return the log method name matching the specified level string
 
-##### registerLevels : @TODO
+##### getLevelValue :
 
-##### express : @TODO
+Return the log level value number for the specified level string
+
+##### setLevel(level) :
+
+Change the current log level (indeed the maximum log level value).
+
+Throw an error if the specified log level is not supported (not in registered levels)
+
+##### isEnabled(level) :
+
+Return true if the specified log level is enabled, else false
+
+##### registerLevels(levels) :
+
+Register (add or override) the specified log levels map (key : level name, value : level value number).
+
+Log levels are first sorted by value number, then value numbers are redefined to an index.
+
+##### express :
+
+Return an [express middleware](http://expressjs.com/guide/using-middleware.html) that logs request and response informations.
 
 ### Log format data
 
-@TODO
+Each log event rendering is based on a data object with useful informations :
+
+```javascript
+{
+  time,         // current timestamp (in moment format),
+  lastTime,     // last log timestamp (in moment format),
+  level,        // log level name,
+  levelValue,   // log level value number,
+  args,         // log method arguments
+  caller: {     // if enabled, provides caller informations
+    file,       // source filename
+    line        // source file line number
+  }
+}
+```
 
 ### Performances
 
