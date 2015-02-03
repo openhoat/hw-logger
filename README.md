@@ -260,7 +260,17 @@ To use a template file, use formatFile option instead of format option (template
 
 #### Replace express logger
 
-@TODO
+Just register the express middleware before your routes :
+
+```javascript
+var logger = require('hw-logger')
+
+var app = express();
+app.use(logger.express());
+app.get('/hello', function (req, res) {
+  res.send('Hello World!');
+});
+```
 
 #### Get log output
 
