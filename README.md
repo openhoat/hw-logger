@@ -290,7 +290,7 @@ Output :
     HTTP  - logger:62 - 51.7s - 127.0.0.1 - GET /world - 404 - 0
     Cannot GET /world
 
-Express log message format : "<request method> <request path> - <response status code> - <response body length>"
+Express log message format : "(request method) (request path) - (response status code) - (response body length)"
 
 #### Get log output
 
