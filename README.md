@@ -22,7 +22,7 @@ npm install hw-logger
 
 ### Getting started
 
-Simply use log object to do the job : [simple.js](/openhoat/hw-logger/blob/master/examples/simple.js)
+Simply use log object to do the job : [example/simple.js](https://github.com/openhoat/hw-logger/blob/master/examples/simple.js)
 
 ```javascript
 var log = require('hw-logger').log;
@@ -38,7 +38,7 @@ Output :
     INFO  - simple:3 - 0ms - hey!
     ERROR - simple:5 - 1ms - ouch
 
-Use logger object to configure things :
+Use logger object to configure things : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
 
 ```javascript
 var logger = require('hw-logger');
