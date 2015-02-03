@@ -36,7 +36,7 @@ function bench(o, fnName) {
   timer = setInterval(function () {
     out('.');
   }, 200);
-  start = (new Date()).getTime();
+  start = Date.now();
   for (count = 0; count < max; count++) {
     msg = randString(Math.round(Math.random() * 40) + 5);
     promises.push(new Promise(function (resolve) {
@@ -50,7 +50,7 @@ function bench(o, fnName) {
     .all(promises)
     .finally(function () {
       clearInterval(timer);
-      end = (new Date()).getTime();
+      end = Date.now();
       durations.push(end - start);
     });
 }

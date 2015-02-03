@@ -23,7 +23,8 @@
     "chalk": "0.5.1",
     "ejs": "2.2.3",
     "lodash": "3.0.1",
-    "moment": "2.9.0"
+    "moment": "2.9.0",
+    "stack-trace": "0.0.9"
   },
   "devDependencies": {
     "bluebird": "2.9.6",

@@ -1,9 +1,5 @@
-var logger = require('./../lib/logger')
-  , log = logger.log;
+var log = require('./../lib/logger').log;
 
-logger.init();
-console.log('log :', log);
 log.info('hey!');
-logger.setLevel('DEBUG');
-console.log('log :', log);
-log.debug('hey!');
+log.debug('does nothing');
+log.error('ouch');
