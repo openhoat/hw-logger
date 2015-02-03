@@ -326,9 +326,9 @@ describe('hw-logger', function () {
 
     it('should show express logs', function (done) {
       http.get({socketPath: socketFile, path: '/hello'}, function (/*res*/) {
-        expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200');
+        expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12');
         http.get({socketPath: socketFile, path: '/world'}, function (/*res*/) {
-          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404');
+          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 0');
           done();
         });
       });
