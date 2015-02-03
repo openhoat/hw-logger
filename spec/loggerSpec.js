@@ -282,7 +282,7 @@ describe('hw-logger', function () {
 
   });
 
-  describe('collaborate with express', function () {
+  describe('express log middleware', function () {
     var path = require('path')
       , http = require('http')
       , server

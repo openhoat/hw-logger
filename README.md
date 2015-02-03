@@ -82,6 +82,44 @@ Default log levels are :
 
 Corresponding methods are : error, warn, info, debug, trace
 
+### API doc
+
+#### logger :
+
+##### init(options) : initialize logger with optionnal custom options
+
+Available options :
+
+```javascript
+{
+  caller,       // (boolean) if true (default), insert caller data
+  colors,       // (boolean) if true, enable colors if supported
+  ejs,          // (object) EJS options (see https://www.npmjs.com/package/ejs#options)
+  format,       // (string|function) log format template string or result of function
+  formatFile,   // (string) log format template file, overrides format if defined
+  levels,       // (object) registered levels map (key : name, value : level value)
+  out           // (object) defines where to send log messages (call a function, use an [events.EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter))
+}
+```
+
+##### log : @TODO
+
+##### getLogMethodName : @TODO
+
+##### getLevelValue : @TODO
+
+##### setLevel : @TODO
+
+##### isEnabled : @TODO
+
+##### registerLevels : @TODO
+
+##### express : @TODO
+
+### Log format data
+
+@TODO
+
 ### Performances
 
     $ node test/benchmark.js
