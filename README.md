@@ -22,7 +22,7 @@ npm install hw-logger
 
 ### Getting started
 
-Simply use log object to do the job : [example/simple.js](https://github.com/openhoat/hw-logger/blob/master/examples/simple.js)
+#### Simply use log object to do the job : [example/simple.js](https://github.com/openhoat/hw-logger/blob/master/examples/simple.js)
 
 ```javascript
 var log = require('hw-logger').log;
@@ -38,7 +38,13 @@ Output :
     INFO  - simple:3 - 0ms - hey!
     ERROR - simple:5 - 1ms - ouch
 
-Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
+By default, hw-logger displays source filename and line number (simple:3).
+
+To get those informations hw-logger need to know the caller, and this process is loud.
+
+So, if you don't need to display the caller informations, it's better to set caller property to false in init options.
+
+#### Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
 
 ```javascript
 var logger = require('hw-logger');
