@@ -38,7 +38,7 @@ Output :
     INFO  - simple:3 - 0ms - hey!
     ERROR - simple:5 - 1ms - ouch
 
-Use logger object to configure things : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
+Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
 
 ```javascript
 var logger = require('hw-logger');
