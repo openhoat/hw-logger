@@ -34,5 +34,6 @@
   "evil": true,
   "-W069": true,
   "-W079": true,
-  "-W083": true
+  "-W083": true,
+  "-W109": true
 }

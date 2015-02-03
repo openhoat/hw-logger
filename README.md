@@ -38,7 +38,39 @@ Output :
     INFO  - simple:3 - 0ms - hey!
     ERROR - simple:5 - 1ms - ouch
 
-By default, hw-logger displays source filename and line number (simple:3). To get those informations hw-logger need to know the caller and this process is loud, so if you don't need to display the caller informations it's better to set caller property to false in init options.
+By default, hw-logger displays source filename and line number (simple:3).
+To get those informations hw-logger need to know the caller and this process is loud, so if you don't need to display the caller informations it's better to set caller property to false in init options.
+
+Override log level with environment variable :
+
+    $ HW_LOG_LEVEL=debug node examples/simple
+    INFO  - simple:3 - 4ms - hey!
+    DEBUG - simple:4 - 2ms - does nothing
+    ERROR - simple:5 - 0ms - ouch
+
+Trace level also display log config at initialization :
+
+    $ HW_LOG_LEVEL=trace node examples/simple
+    TRACE - logger:97 - 4ms - log config : { levels: { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3, TRACE: 4 },
+      formatFile: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs',
+      level: 'TRACE',
+      colors: true,
+      ejs: { filename: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs' },
+      out: [Function],
+      caller: true,
+      format: '<%\nvar colorMethods, colorMethod, level;\ncolorMethods = {\n  ERROR: \'red\',\n  WARN:  \'yellow\',\n  INFO:  \'blue\',\n  DEBUG: \'bgBlack\',\n  TRACE: \'inverse\'\n};\ncolorMethod = colorMethods[data.level] || \'white\';\nlevel = (data.level + new Array(config.levelsMaxLength + 1).join(\' \')).slice(0, config.levelsMaxLength);\n%><%- chalk.bold[colorMethod](level) %> - <%\nif (data.caller) {\n%><%- chalk.magenta(util.format(\'%s:%s\', path.basename(data.caller.file, \'.js\'), data.caller.line)) %> - <%\n} %><%- data.lastTime ? (function(duration) {\n  return duration > 1000 ? Math.round(duration / 100) / 10 + \'s\' : duration + \'ms\';\n})(data.time.diff(data.lastTime)) : \'0ms\' %> - <%- util.format.apply(null, data.args) %>',
+      levelValue: 4,
+      levelsMaxLength: 5 }
+    INFO  - simple:3 - 3ms - hey!
+    DEBUG - simple:4 - 0ms - does nothing
+    ERROR - simple:5 - 0ms - ouch
+
+Usual NODE_ENV environment variable is detected to override default log level with error only (useful on production systems) :
+
+    $ NODE_ENV=production node examples/simple
+    ERROR - simple:5 - 4ms - ouch
+
+Tips : if HW_LOG_LEVEL and NODE_ENV are both defined, HW_LOG_LEVEL has priority
 
 #### Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
 
@@ -155,6 +187,39 @@ Each log event rendering is based on a data object with useful informations :
   }
 }
 ```
+
+### Use cases
+
+#### Custom format : [example/customFormat.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormat.js)
+
+```javascript
+var logger = require('hw-logger')
+  , log = logger.log;
+
+logger.init({
+  format: "LOG EVENT @ <%- data.time %> : <%- util.format.apply(null, data.args) %>"
+  // Use data object to get log event details (see https://github.com/openhoat/hw-logger#log-format-data)
+  // Other available objects : chalk (for colors), util, path, config (logger config)
+});
+
+log.info('hello %s!', 'world');
+log.debug('does nothing');
+log.error('ouch');
+```
+
+Output :
+
+    $ node examples/customFormat
+    LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : hello world!
+    LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : ouch
+
+#### Replace express logger
+
+@TODO
+
+#### Get log output
+
+@TODO
 
 ### Performances
 
