@@ -198,8 +198,13 @@ var logger = require('hw-logger')
 
 logger.init({
   format: "LOG EVENT @ <%- data.time %> : <%- util.format.apply(null, data.args) %>"
-  // Use data object to get log event details (see https://github.com/openhoat/hw-logger#log-format-data)
-  // Other available objects : chalk (for colors), util, path, config (logger config)
+  /**
+   *
+   * EJS template format (see https://www.npmjs.com/package/ejs)
+   * Use data object to get log event details (see https://github.com/openhoat/hw-logger#log-format-data)
+   * Other objects available in template : chalk (for colors), util, path, config (logger config)
+   *
+   */
 });
 
 log.info('hello %s!', 'world');
