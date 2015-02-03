@@ -294,9 +294,32 @@ Express log message format :
 
 - (request method) (request path) - (response status code) - (response body length)
 
-#### Get log output
+#### Handle log output
 
-@TODO
+Specify any handler based on event emitter, or a function to handle all log messages.
+
+```javascript
+var logger = require('hw-logger')
+  , events = require('events')
+  , log = logger.log;
+
+var eventEmitter = new events.EventEmitter();
+
+logger.init({
+  out: eventEmitter
+});
+
+eventEmitter.on('data', function (data) {
+  console.log('data :', data); // Receive log messages
+});
+
+log.info('handle this!'); // Display nothing
+```
+
+Output :
+
+    $ node examples/out
+    data : INFO  - out:14 - 5ms - handle this!
 
 ### Performances
 
