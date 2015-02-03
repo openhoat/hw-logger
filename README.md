@@ -291,7 +291,8 @@ Output :
     Cannot GET /world
 
 Express log message format :
-    - "(request method) (request path) - (response status code) - (response body length)"
+
+- "(request method) (request path) - (response status code) - (response body length)"
 
 #### Get log output
 
