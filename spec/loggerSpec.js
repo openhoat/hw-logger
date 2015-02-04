@@ -27,7 +27,8 @@ describe('hw-logger', function () {
       eventEmitter = new events.EventEmitter();
       logger.init({
         format: logFormat,
-        out: eventEmitter
+        out: eventEmitter,
+        level: 'info'
       });
       eventEmitter.on('data', function (data) {
         logData.buffer += data;
@@ -297,29 +298,27 @@ describe('hw-logger', function () {
       , server;
 
     before(function (done) {
+      var express = require('express')
+        , app = express();
       logData = {};
       eventEmitter = new events.EventEmitter();
-      logger.init({
-        format: logFormat,
-        out: eventEmitter,
-        extraLevels: {http: 2.5}
-      });
       eventEmitter.on('data', function (data) {
         logData.buffer += data;
         logData.last = data;
       });
-      (function initExpress(express) {
-        var app = express();
-        app.use(logger.express());
-        app.get('/hello', function (req, res) {
-          res.send('Hello World!');
-        });
-        server = app.listen(socketFile, done);
-      })(require('express'));
+      app.use(logger.express());
+      app.get('/hello', function (req, res) {
+        res.send('Hello World!');
+      });
+      logger.init({
+        format: logFormat,
+        out: eventEmitter,
+        level: 'http'
+      });
+      server = app.listen(socketFile, done);
     });
 
     after(function (done) {
-      eventEmitter.removeAllListeners('data');
       eventEmitter.removeAllListeners('data');
       if (server) {
         server.close(done);
@@ -334,7 +333,6 @@ describe('hw-logger', function () {
     });
 
     it('should show express logs', function () {
-      log.debug('coucou');
       var requestAsync = Promise.promisify(request);
       return requestAsync(
         {
