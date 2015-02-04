@@ -328,7 +328,7 @@ describe('hw-logger', function () {
       http.get({socketPath: socketFile, path: '/hello'}, function (/*res*/) {
         expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12');
         http.get({socketPath: socketFile, path: '/world'}, function (/*res*/) {
-          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 0');
+          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 18');
           done();
         });
       });
