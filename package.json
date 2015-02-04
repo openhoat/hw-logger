@@ -1,6 +1,6 @@
 {
   "name": "hw-logger",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Efficient logger for node",
   "main": "lib/logger.js",
   "scripts": {
@@ -57,7 +57,9 @@
     "jshint-stylish": "1.0.0",
     "load-grunt-tasks": "1.0.0",
     "log4js": "0.6.22",
+    "mkdirp": "0.5.0",
     "mocha": "2.1.0",
+    "request": "2.53.0",
     "time-grunt": "1.0.0",
     "winston": "0.8.3"
   }

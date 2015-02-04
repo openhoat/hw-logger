@@ -3,13 +3,22 @@
 var chai = require('chai')
   , events = require('events')
   , util = require('util')
+  , Promise = require('bluebird')
+  , path = require('path')
+  , mkdirp = require('mkdirp')
   , logger = require('../lib/logger')
   , log = logger.log
   , expect = chai.expect
+  , should = chai.should()
   , logFormat = '<%- data.level %> - <%- util.format.apply(null, data.args) %>'
-  , eventEmitter, logData;
+  , eventEmitter, logData
+  , tmpDir = path.join(__dirname, '..', 'tmp');
 
 describe('hw-logger', function () {
+
+  before(function () {
+    return Promise.promisify(mkdirp)(tmpDir);
+  });
 
   describe('default log config', function () {
 
@@ -39,21 +48,21 @@ describe('hw-logger', function () {
       var level = 'INFO'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should log an error message', function () {
       var level = 'ERROR'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should log a warn message', function () {
       var level = 'WARN'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should not log a debug message', function () {
@@ -101,28 +110,28 @@ describe('hw-logger', function () {
       var level = 'INFO'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should log an error message', function () {
       var level = 'ERROR'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should log a warn message', function () {
       var level = 'WARN'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should log a debug message', function () {
       var level = 'DEBUG'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should not log a trace message', function () {
@@ -170,7 +179,7 @@ describe('hw-logger', function () {
       var level = 'ERROR'
         , msg = 'hello';
       log[logger.getLogMethodName(level)].call(null, msg);
-      expect(logData.last).to.equal(util.format('%s - %s', level, msg));
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
     });
 
     it('should not log a warn message', function () {
@@ -226,16 +235,16 @@ describe('hw-logger', function () {
       expect(logData.last).to.not.be.ok;
       logger.setLevel('info');
       log.info('hello');
-      expect(logData.last).to.equal('INFO - hello');
+      expect(logData.last).to.equal('INFO - hello\n');
       logData.last = null;
       log.trace('hello');
       expect(logData.last).to.not.be.ok;
       logger.setLevel('trace');
       log.trace('hello');
-      expect(logData.last).to.equal('TRACE - hello');
+      expect(logData.last).to.equal('TRACE - hello\n');
       logData.last = null;
       log.error('hello');
-      expect(logData.last).to.equal('ERROR - hello');
+      expect(logData.last).to.equal('ERROR - hello\n');
       logData.last = null;
     });
 
@@ -268,7 +277,7 @@ describe('hw-logger', function () {
     it('should add a log level', function () {
       logger.setLevel('info');
       log.info('hello');
-      expect(logData.last).to.equal('INFO - hello');
+      expect(logData.last).to.equal('INFO - hello\n');
       logData.last = null;
       expect(log).to.not.have.property('danger');
       logger.registerLevels({DANGER: 5});
@@ -276,24 +285,24 @@ describe('hw-logger', function () {
       expect(logData.last).to.not.be.ok;
       logger.setLevel('danger');
       log.danger('world');
-      expect(logData.last).to.equal('DANGER - world');
+      expect(logData.last).to.equal('DANGER - world\n');
       logData.last = null;
     });
 
   });
 
   describe('express log middleware', function () {
-    var path = require('path')
-      , http = require('http')
-      , server
-      , socketFile = path.join(__dirname, '..', 'web.sock');
+    var request = require('request')
+      , socketFile = path.join(tmpDir, 'web.sock')
+      , server;
 
     before(function (done) {
       logData = {};
       eventEmitter = new events.EventEmitter();
       logger.init({
         format: logFormat,
-        out: eventEmitter
+        out: eventEmitter,
+        extraLevels: {http: 2.5}
       });
       eventEmitter.on('data', function (data) {
         logData.buffer += data;
@@ -324,14 +333,23 @@ describe('hw-logger', function () {
       logData.last = null;
     });
 
-    it('should show express logs', function (done) {
-      http.get({socketPath: socketFile, path: '/hello'}, function (/*res*/) {
-        expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12');
-        http.get({socketPath: socketFile, path: '/world'}, function (/*res*/) {
-          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 18');
-          done();
+    it('should show express logs', function () {
+      log.debug('coucou');
+      var requestAsync = Promise.promisify(request);
+      return requestAsync(
+        {
+          url: util.format('http://unix:%s:%s', socketFile, '/hello')
+        })
+        .spread(function (res) {
+          res.statusCode.should.equal(200);
+          expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12\n');
+        }).then(function () {
+          return requestAsync({url: util.format('http://unix:%s:%s', socketFile, '/world')});
+        })
+        .spread(function (res) {
+          res.statusCode.should.equal(404);
+          expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 18\n');
         });
-      });
     });
 
   });
