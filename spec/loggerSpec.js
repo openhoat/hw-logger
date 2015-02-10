@@ -234,12 +234,14 @@ describe('hw-logger', function () {
     it('should change log level', function () {
       log.info('hello');
       expect(logData.last).to.not.be.ok;
+      //
       logger.setLevel('info');
       log.info('hello');
       expect(logData.last).to.equal('INFO - hello\n');
       logData.last = null;
       log.trace('hello');
       expect(logData.last).to.not.be.ok;
+      //
       logger.setLevel('trace');
       log.trace('hello');
       expect(logData.last).to.equal('TRACE - hello\n');
@@ -247,6 +249,19 @@ describe('hw-logger', function () {
       log.error('hello');
       expect(logData.last).to.equal('ERROR - hello\n');
       logData.last = null;
+      //
+      logger.setLevel('all');
+      log.trace('hello');
+      expect(logData.last).to.equal('TRACE - hello\n');
+      log.debug('hello');
+      expect(logData.last).to.equal('DEBUG - hello\n');
+      logData.last = null;
+      //
+      logger.setLevel('none');
+      log.trace('hello');
+      expect(logData.last).to.not.be.ok;
+      log.debug('hello');
+      expect(logData.last).to.not.be.ok;
     });
 
   });
@@ -281,7 +296,7 @@ describe('hw-logger', function () {
       expect(logData.last).to.equal('INFO - hello\n');
       logData.last = null;
       expect(log).to.not.have.property('danger');
-      logger.registerLevels({DANGER: 5});
+      logger.registerLevels({DANGER: 6});
       log.danger('world');
       expect(logData.last).to.not.be.ok;
       logger.setLevel('danger');

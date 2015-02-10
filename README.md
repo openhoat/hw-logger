@@ -51,7 +51,7 @@ Override log level with environment variable :
 Trace level also display log config at initialization :
 
     $ HW_LOG_LEVEL=trace node examples/simple
-    TRACE - logger:97 - 4ms - log config : { levels: { ERROR: 0, WARN: 1, INFO: 2, DEBUG: 3, TRACE: 4 },
+    TRACE - logger:97 - 4ms - log config : { levels: { NONE: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4, TRACE: 5, ALL: 6 },
       formatFile: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs',
       level: 'TRACE',
       colors: true,
@@ -106,13 +106,15 @@ Log level is defined by :
 
 Default log levels are :
 
-- ERROR: 0
-- WARN: 1
-- INFO: 2
-- DEBUG: 3
-- TRACE: 4
+- NONE: 0
+- ERROR: 1
+- WARN: 2
+- INFO: 3
+- DEBUG: 4
+- TRACE: 5
+- ALL: 6
 
-Corresponding methods are : error, warn, info, debug, trace
+Corresponding methods are : error, warn, info, debug, trace (NONE and ALL do not have methods, they're juste levels)
 
 ### API doc
 
@@ -197,11 +199,11 @@ var logger = require('hw-logger')
   , log = logger.log;
 
 logger.registerLevels({
-  IMPORTANT: 1.5,
+  IMPORTANT: 2.5,
   /**
-   *  Current levels are : ERROR, WARN, INFO, DEBUG, TRACE
-   *  with a level value equal to its index (0 to 4).
-   *  Adding a new level with a value of 1.5 will have the effect to insert the new level between values 1 and 2
+   *  Current levels are : NONE, ERROR, WARN, INFO, DEBUG, TRACE, ALL
+   *  with a level value equal to its index (0 to 6).
+   *  Adding a new level with a value of 2.5 will have the effect to insert the new level between values 2 and 3
    *  After having the new level inserted, the all level values are redefined to reflect indexes of an array
    */
   FED_UP: 99 // very high level means very low priority
@@ -225,7 +227,7 @@ Output :
     $ node examples/customLevel
     IMPORTANT - customLevel:15 - 4ms - hello world!
     ERROR     - customLevel:17 - 2ms - ouch
-    [ 'ERROR', 'WARN', 'IMPORTANT', 'INFO', 'DEBUG', 'TRACE', 'FED_UP' ]
+    [ 'NONE', 'ERROR', 'WARN', 'IMPORTANT', 'INFO', 'DEBUG', 'TRACE', 'FED_UP', 'ALL' ]
     FED_UP    - customLevel:25 - 1ms - boring again
 
 #### Custom format : [example/customFormat.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormat.js)

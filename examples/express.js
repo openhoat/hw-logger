@@ -1,3 +1,5 @@
+'use strict';
+
 var logger = require('hw-logger')
   , log = logger.log
   , express = require('express');

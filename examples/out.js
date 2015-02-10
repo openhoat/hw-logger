@@ -1,3 +1,5 @@
+'use strict';
+
 var logger = require('./../lib/logger')
   , events = require('events')
   , log = logger.log;

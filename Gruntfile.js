@@ -29,7 +29,8 @@ module.exports = function (grunt) {
     mochacov: {
       test: {
         options: {
-          reporter: 'spec'
+          reporter: 'spec',
+          growl: process.stdout.isTTY
         }
       },
       coverage: {
