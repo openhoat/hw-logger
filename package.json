@@ -30,6 +30,7 @@
         "lib"
       ],
       "data-cover-never": [
+        "examples",
         "node_modules",
         "test"
       ]
