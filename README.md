@@ -264,7 +264,7 @@ Output :
 
 To use a template file, use formatFile option instead of format option (template [examples](https://github.com/openhoat/hw-logger/tree/master/templates)).
 
-#### Replace express logger
+#### Replace express logger : [example/express.js](https://github.com/openhoat/hw-logger/blob/master/examples/express.js)
 
 Just register the express middleware before your routes :
 
@@ -304,7 +304,7 @@ Express log message format :
 
 Specify any handler based on an [event emitter](http://nodejs.org/api/events.html), a function, a [writable stream](http://nodejs.org/api/stream.html#stream_class_stream_writable), or a file to handle all log messages.
 
-##### Event emitter :
+##### Event emitter : [example/outEventEmitter.js](https://github.com/openhoat/hw-logger/blob/master/examples/outEventEmitter.js)
 
 Each log message is a provided through 'data' event.
 
@@ -330,7 +330,7 @@ Output :
     $ node examples/outEventEmitter
     data : INFO  - out:14 - 5ms - handle this!
 
-##### Stream :
+##### Stream : [example/outStream.js](https://github.com/openhoat/hw-logger/blob/master/examples/outStream.js)
 
 The logger writes log messages asynchronously, so to be sure to be able to read data you can flush the logger.
 
@@ -359,7 +359,7 @@ Output :
     $ node examples/outStream.js
     INFO  - outStream:13 - 6ms - stream data!
 
-##### File :
+##### File : [example/outFile.js](https://github.com/openhoat/hw-logger/blob/master/examples/outFile.js)
 
 The logger uses an interal stream, and writes log messages asynchronously into it, so use flush to be sure data are effectively written in file.
 
@@ -388,7 +388,7 @@ Output :
     $ node examples/outFile.js
     INFO  - outFile:13 - 6ms - file content!
 
-##### Function handler :
+##### Function handler : [example/outFunc.js](https://github.com/openhoat/hw-logger/blob/master/examples/outFunc.js)
 
 Use any function to handle log messages.
 
