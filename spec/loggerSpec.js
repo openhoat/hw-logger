@@ -273,7 +273,8 @@ describe('hw-logger', function () {
       eventEmitter = new events.EventEmitter();
       logger.init({
         format: logFormat,
-        out: eventEmitter
+        out: eventEmitter,
+        level: 'info'
       });
       eventEmitter.on('data', function (data) {
         logData.buffer += data;
@@ -363,6 +364,123 @@ describe('hw-logger', function () {
           res.statusCode.should.equal(404);
           expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 18\n');
         });
+    });
+
+  });
+
+  describe('log to stream', function () {
+    var path = require('path')
+      , fs = require('fs')
+      , logFile = path.join(tmpDir, 'out.log')
+      , readFile = Promise.promisify(fs.readFile)
+      , unlink = Promise.promisify(fs.unlink)
+      , flush = Promise.promisify(logger.flush);
+
+    before(function () {
+      logger.init({
+        format: logFormat,
+        out: fs.createWriteStream(logFile),
+        level: 'info'
+      });
+    });
+
+    after(function () {
+      return unlink(logFile);
+    });
+
+    it('should log messages to log stream', function () {
+      var msg = 'hello';
+      log[logger.getLogMethodName('INFO')].call(null, msg);
+      log[logger.getLogMethodName('ERROR')].call(null, msg);
+      log[logger.getLogMethodName('WARN')].call(null, msg);
+      log[logger.getLogMethodName('DEBUG')].call(null, msg);
+      log[logger.getLogMethodName('TRACE')].call(null, msg);
+      return flush()
+        .then(function () {
+          return readFile(logFile, 'utf8')
+            .then(function (data) {
+              expect(data).to.equal(
+                ['INFO', 'ERROR', 'WARN']
+                  .map(function (level) {
+                    return util.format('%s - %s', level, msg);
+                  })
+                  .join('\n') + '\n'
+              );
+            });
+        });
+    });
+
+  });
+
+  describe('log to file', function () {
+    var path = require('path')
+      , fs = require('fs')
+      , logFile = path.join(tmpDir, 'out.log')
+      , readFile = Promise.promisify(fs.readFile)
+      , unlink = Promise.promisify(fs.unlink)
+      , flush = Promise.promisify(logger.flush);
+
+    before(function () {
+      logger.init({
+        format: logFormat,
+        out: logFile,
+        level: 'info'
+      });
+    });
+
+    after(function () {
+      return unlink(logFile);
+    });
+
+    it('should log messages to log file', function () {
+      var msg = 'hello';
+      log[logger.getLogMethodName('INFO')].call(null, msg);
+      log[logger.getLogMethodName('ERROR')].call(null, msg);
+      log[logger.getLogMethodName('WARN')].call(null, msg);
+      log[logger.getLogMethodName('DEBUG')].call(null, msg);
+      log[logger.getLogMethodName('TRACE')].call(null, msg);
+      return flush()
+        .then(function () {
+          return readFile(logFile, 'utf8');
+        })
+        .then(function (data) {
+          expect(data).to.equal(
+            ['INFO', 'ERROR', 'WARN']
+              .map(function (level) {
+                return util.format('%s - %s', level, msg);
+              })
+              .join('\n') + '\n'
+          );
+        });
+    });
+
+  });
+
+  describe('log handling by a function', function () {
+    var logLines = [];
+
+    function logHandler(data) {
+      logLines.push(data);
+    }
+
+    before(function () {
+      logger.init({
+        format: logFormat,
+        out: logHandler,
+        level: 'info'
+      });
+    });
+
+    it('should log messages to handler', function () {
+      var msg = 'hello';
+      log[logger.getLogMethodName('INFO')].call(null, msg);
+      log[logger.getLogMethodName('ERROR')].call(null, msg);
+      log[logger.getLogMethodName('WARN')].call(null, msg);
+      log[logger.getLogMethodName('DEBUG')].call(null, msg);
+      log[logger.getLogMethodName('TRACE')].call(null, msg);
+      expect(logLines).to.eql(['INFO', 'ERROR', 'WARN'].map(function (level) {
+        return util.format('%s - %s', level, msg);
+      }));
     });
 
   });

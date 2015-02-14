@@ -134,7 +134,7 @@ Available options :
   format,       // (string|function) log format template string or result of function
   formatFile,   // (string) log format template file, overrides format if defined
   levels,       // (object) registered levels map (key : name, value : level value)
-  out           // (object) defines where to send log messages (call a function, use an [events.EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter))
+  out           // (object) defines where to send log messages (call a function, use an [events.EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter), a writable stream or a file)
 }
 ```
 
@@ -171,6 +171,10 @@ Log levels are first sorted by value number, then value numbers are redefined to
 ##### express :
 
 Return an [express middleware](http://expressjs.com/guide/using-middleware.html) that logs request and response informations.
+
+##### flush :
+
+Flush data to the stream or file if specified as out, else do nothing.
 
 ### Log format data
 
@@ -298,21 +302,24 @@ Express log message format :
 
 #### Handle log output
 
-Specify any handler based on event emitter, or a function to handle all log messages.
+Specify any handler based on an [event emitter](http://nodejs.org/api/events.html), a function, a [writable stream](http://nodejs.org/api/stream.html#stream_class_stream_writable), or a file to handle all log messages.
+
+##### Event emitter :
+
+Each log message is a provided through 'data' event.
 
 ```javascript
-var logger = require('hw-logger')
+var logger = require('./../lib/logger')
   , events = require('events')
-  , log = logger.log;
-
-var eventEmitter = new events.EventEmitter();
-
-logger.init({
-  out: eventEmitter
-});
+  , log = logger.log
+  , eventEmitter = new events.EventEmitter();
 
 eventEmitter.on('data', function (data) {
   console.log('data :', data); // Receive log messages
+});
+
+logger.init({
+  out: eventEmitter
 });
 
 log.info('handle this!'); // Display nothing
@@ -320,8 +327,90 @@ log.info('handle this!'); // Display nothing
 
 Output :
 
-    $ node examples/out
+    $ node examples/outEventEmitter
     data : INFO  - out:14 - 5ms - handle this!
+
+##### Stream :
+
+The logger writes log messages asynchronously, so to be sure to be able to read data you can flush the logger.
+
+```javascript
+var path = require('path')
+  , fs = require('fs')
+  , logger = require('hw-logger')
+  , log = logger.log
+  , tmpDir = path.join(__dirname, '..', 'tmp')
+  , logFile = path.join(tmpDir, 'out.log');
+
+logger.init({
+  out: fs.createWriteStream(logFile)
+});
+log.info('stream data!'); // Display nothing
+
+function done() {
+  console.log(fs.readFileSync(logFile, 'utf8'));
+}
+
+logger.flush(done);
+```
+
+Output :
+
+    $ node examples/outStream.js
+    INFO  - outStream:13 - 6ms - stream data!
+
+##### File :
+
+The logger uses an interal stream, and writes log messages asynchronously into it, so use flush to be sure data are effectively written in file.
+
+```javascript
+var path = require('path')
+  , fs = require('fs')
+  , logger = require('hw-logger')
+  , log = logger.log
+  , tmpDir = path.join(__dirname, '..', 'tmp')
+  , logFile = path.join(tmpDir, 'out.log');
+
+logger.init({
+  out: logFile // if out is a string, it will be considered as a file path
+});
+log.info('file content!'); // Display nothing
+
+function done() {
+  console.log(fs.readFileSync(logFile, 'utf8'));
+}
+
+logger.flush(done);
+```
+
+Output :
+
+    $ node examples/outFile.js
+    INFO  - outFile:13 - 6ms - file content!
+
+##### Function handler :
+
+Use any function to handle log messages.
+
+```javascript
+var logger = require('hw-logger')
+  , log = logger.log;
+
+function logHandler(data) {
+  console.log(data);
+}
+
+logger.init({
+  out: logHandler
+});
+
+log.info('file content!'); // Display nothing
+```
+
+Output :
+
+    $ node examples/outFunc.js
+    INFO  - outFunc:14 - 5ms - file content!
 
 ### Performances
 
