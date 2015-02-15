@@ -27,8 +27,7 @@ describe('hw-logger', function () {
       eventEmitter = new events.EventEmitter();
       logger.init({
         format: logFormat,
-        out: eventEmitter,
-        level: 'info'
+        out: eventEmitter
       });
       eventEmitter.on('data', function (data) {
         logData.buffer += data;
@@ -322,14 +321,13 @@ describe('hw-logger', function () {
         logData.buffer += data;
         logData.last = data;
       });
+      logger.init({
+        format: logFormat,
+        out: eventEmitter
+      });
       app.use(logger.express());
       app.get('/hello', function (req, res) {
         res.send('Hello World!');
-      });
-      logger.init({
-        format: logFormat,
-        out: eventEmitter,
-        level: 'http'
       });
       server = app.listen(socketFile, done);
     });
@@ -379,8 +377,7 @@ describe('hw-logger', function () {
     before(function () {
       logger.init({
         format: logFormat,
-        out: fs.createWriteStream(logFile),
-        level: 'info'
+        out: fs.createWriteStream(logFile)
       });
     });
 
@@ -423,8 +420,7 @@ describe('hw-logger', function () {
     before(function () {
       logger.init({
         format: logFormat,
-        out: logFile,
-        level: 'info'
+        out: logFile
       });
     });
 
@@ -466,8 +462,7 @@ describe('hw-logger', function () {
     before(function () {
       logger.init({
         format: logFormat,
-        out: logHandler,
-        level: 'info'
+        out: logHandler
       });
     });
 
@@ -483,6 +478,14 @@ describe('hw-logger', function () {
       }));
     });
 
+  });
+
+  describe('bad format', function () {
+    it('should throw an error', function () {
+      expect(function () {
+        logger.init({format: {a: 'b'}});
+      }).to.throw('format not supported');
+    });
   });
 
 });

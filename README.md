@@ -172,6 +172,17 @@ Log levels are first sorted by value number, then value numbers are redefined to
 
 Return an [express middleware](http://expressjs.com/guide/using-middleware.html) that logs request and response informations.
 
+It adds HTTP level between INFO and DEBUG, and set HTTP to the current level.
+
+An options object can be specified :
+
+```javascript
+{
+  logger,    // (function) if set the function is called by logger as a custom express middleware
+  logBefore, // (boolean) if true logs are done before the end of request and do not include response infos
+}
+```
+
 ##### flush :
 
 Flush data to the stream or file if specified as out, else do nothing.
@@ -266,15 +277,16 @@ To use a template file, use formatFile option instead of format option (template
 
 #### Replace express logger : [example/express.js](https://github.com/openhoat/hw-logger/blob/master/examples/express.js)
 
-Just register the express middleware before your routes :
+Just register the express middleware before your routes (and after logger.init) :
 
 ```javascript
 var logger = require('hw-logger')
   , log = logger.log
   , express = require('express');
 
+// logger.init({...}); // if needed, has to be before logger.express because init restore logger config to defaults
 var app = express();
-app.use(logger.express());
+app.use(logger.express()); // Be sure to not have logger.init after this line to prevent http level removing
 app.get('/hello', function (req, res) {
   res.send('Hello World!');
 });
