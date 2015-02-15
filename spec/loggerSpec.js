@@ -9,7 +9,6 @@ var chai = require('chai')
   , logger = require('../lib/logger')
   , log = logger.log
   , expect = chai.expect
-  , should = chai.should()
   , logFormat = '<%- data.level %> - <%- util.format.apply(null, data.args) %>'
   , eventEmitter, logData
   , tmpDir = path.join(__dirname, '..', 'tmp');
@@ -307,6 +306,42 @@ describe('hw-logger', function () {
 
   });
 
+  describe('use a custom format function', function () {
+
+    before(function () {
+      logData = {};
+      eventEmitter = new events.EventEmitter();
+      logger.init({
+        format: function (data) {
+          return data.args.join(',');
+        },
+        out: eventEmitter,
+        level: 'info'
+      });
+      eventEmitter.on('data', function (data) {
+        logData.buffer += data;
+        logData.last = data;
+      });
+    });
+
+    after(function () {
+      eventEmitter.removeAllListeners('data');
+    });
+
+    beforeEach(function () {
+      logData.buffer = '';
+      logData.last = null;
+    });
+
+    it('should use a custom format defined in a function', function () {
+      logger.setLevel('info');
+      log.info('hello', 'world');
+      expect(logData.last).to.equal('hello,world\n');
+      logData.last = null;
+    });
+
+  });
+
   describe('express log middleware', function () {
     var request = require('request')
       , socketFile = path.join(tmpDir, 'web.sock')
@@ -353,13 +388,13 @@ describe('hw-logger', function () {
           url: util.format('http://unix:%s:%s', socketFile, '/hello')
         })
         .spread(function (res) {
-          res.statusCode.should.equal(200);
+          expect(res.statusCode).to.equal(200);
           expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12\n');
         }).then(function () {
           return requestAsync({url: util.format('http://unix:%s:%s', socketFile, '/world')});
         })
         .spread(function (res) {
-          res.statusCode.should.equal(404);
+          expect(res.statusCode).to.equal(404);
           expect(logData.last).to.equal('HTTP - undefined - GET /world - 404 - 18\n');
         });
     });

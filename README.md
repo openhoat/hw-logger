@@ -193,11 +193,11 @@ Each log event rendering is based on a data object with useful informations :
 
 ```javascript
 {
-  time,         // current timestamp (in moment format),
-  lastTime,     // last log timestamp (in moment format),
-  level,        // log level name,
-  levelValue,   // log level value number,
-  args,         // log method arguments
+  time,         // current timestamp (in moment format)
+  lastTime,     // last log timestamp (in moment format)
+  level,        // log level name
+  levelValue,   // log level value number
+  args,         // log method arguments, for example in log.info('hello', 'world') arguments are ['hello', 'world']
   caller: {     // if enabled, provides caller informations
     file,       // source filename
     line        // source file line number
@@ -254,11 +254,9 @@ var logger = require('hw-logger')
 logger.init({
   format: "LOG EVENT @ <%- data.time %> : <%- util.format.apply(null, data.args) %>"
   /**
-   *
    * EJS template format (see https://www.npmjs.com/package/ejs)
    * Use data object to get log event details (see https://github.com/openhoat/hw-logger#log-format-data)
    * Other objects available in template : chalk (for colors), util, path, config (logger config)
-   *
    */
 });
 
@@ -274,6 +272,32 @@ Output :
     LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : ouch
 
 To use a template file, use formatFile option instead of format option (template [examples](https://github.com/openhoat/hw-logger/tree/master/templates)).
+
+#### Custom format function : [example/customFormatFunc.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormatFunc.js)
+
+```javascript
+var util = require('util')
+  , logger = require('hw-logger')
+  , log = logger.log;
+
+function customFormat(data) {
+  return util.format('custom format - %s : %s', data.level, data.args.join(', '));
+}
+
+logger.init({
+  format: customFormat // argument : log event details object (see https://github.com/openhoat/hw-logger#log-format-data)
+});
+
+log.info('hello %s!', 'world');
+log.debug('does nothing');
+log.error('ouch');
+```
+
+Output :
+
+    $ node examples/customFormatFunc
+    custom format - INFO : hello %s!, world
+    custom format - ERROR : ouch
 
 #### Replace express logger : [example/express.js](https://github.com/openhoat/hw-logger/blob/master/examples/express.js)
 
@@ -441,5 +465,30 @@ Output :
          log4js	 : 6987ms
          bunyan	 : 9210ms
     ################################
+
+### Build
+
+Prerequisite :
+
+    $ npm install -g grunt-cli
+
+#### Run tests
+
+    $ grunt test
+
+#### Test coverage
+
+    $ grunt coverage
+
+#### Code quality
+
+    $ grunt verify
+
+#### Default build
+
+Does test, coverage and verify
+
+    $ grunt
+
 
 Enjoy !
