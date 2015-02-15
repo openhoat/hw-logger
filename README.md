@@ -480,6 +480,7 @@ Prerequisite :
 #### Test coverage
 
     $ grunt coverage
+    $ xdg-open dist/reports/coverage.html
 
 #### Code quality
 
