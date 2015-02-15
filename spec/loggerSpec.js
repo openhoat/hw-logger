@@ -352,13 +352,59 @@ describe('hw-logger', function () {
       logData.last = null;
     });
 
-    it('should add a log level', function () {
+    it('should add a log level and return levels', function () {
       logger.setLevel('info');
       log.info('hello');
       expect(logData.last).to.equal('INFO - hello\n');
       logData.last = null;
       expect(log).to.not.have.property('danger');
+      expect(logger.getLevels()).to.eql(['NONE', 'ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE', 'ALL']);
       logger.registerLevels({DANGER: 6});
+      log.danger('world');
+      expect(logData.last).to.not.be.ok;
+      logger.setLevel('danger');
+      log.danger('world');
+      expect(logData.last).to.equal('DANGER - world\n');
+      logData.last = null;
+      expect(logger.getLevels()).to.eql(['NONE', 'ERROR', 'WARN', 'INFO', 'DEBUG', 'TRACE', 'DANGER', 'ALL']);
+    });
+
+  });
+
+  describe('init with extra levels', function () {
+
+    before(function () {
+      logData = {};
+      eventEmitter = new events.EventEmitter();
+      logger.init({
+        format: logFormat,
+        out: eventEmitter,
+        level: 'info',
+        extraLevels: {important: 2.5, danger: 6}
+      });
+      eventEmitter.on('data', function (data) {
+        logData.buffer += data;
+        logData.last = data;
+      });
+    });
+
+    after(function () {
+      eventEmitter.removeAllListeners('data');
+    });
+
+    beforeEach(function () {
+      logData.buffer = '';
+      logData.last = null;
+    });
+
+    it('should have 2 extra levels', function () {
+      expect(logger.getLevels()).to.eql(['NONE', 'ERROR', 'WARN', 'IMPORTANT', 'INFO', 'DEBUG', 'TRACE', 'DANGER', 'ALL']);
+      log.info('hello');
+      expect(logData.last).to.equal('INFO - hello\n');
+      logData.last = null;
+      log.important('world');
+      expect(logData.last).to.equal('IMPORTANT - world\n');
+      logData.last = null;
       log.danger('world');
       expect(logData.last).to.not.be.ok;
       logger.setLevel('danger');
@@ -579,10 +625,29 @@ describe('hw-logger', function () {
   });
 
   describe('bad format', function () {
-    it('should throw an error', function () {
+    it('should throw an error because of bad format', function () {
       expect(function () {
         logger.init({format: {a: 'b'}});
       }).to.throw('format not supported');
+    });
+  });
+
+  describe('bad level', function () {
+    it('should throw an error because of bad level', function () {
+      expect(function () {
+        logger.init({level: 'bad'});
+      }).to.throw('log level BAD is not supported');
+    });
+  });
+
+  describe('bad output', function () {
+    it('should throw an error because of bad output', function () {
+      expect(function () {
+        logger.init({out: 3});
+      }).to.throw('Output not supported');
+      expect(function () {
+        logger.init({out: {b: 3}});
+      }).to.throw('Output object instance not supported');
     });
   });
 
