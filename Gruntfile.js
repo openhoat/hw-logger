@@ -39,6 +39,12 @@ module.exports = function (grunt) {
           output: 'dist/reports/coverage.html'
         }
       },
+      coveralls: {
+        options: {
+          coveralls: true,
+          output: 'dist/reports/coverage.lcov'
+        }
+      },
       options: {
         files: ['spec/*.js']
       }
@@ -50,5 +56,6 @@ module.exports = function (grunt) {
   grunt.registerTask('verify', ['mkdir', 'jshint']);
   grunt.registerTask('test', ['mkdir', 'mochacov:test']);
   grunt.registerTask('coverage', ['mkdir', 'mochacov:test', 'mochacov:coverage']);
+  grunt.registerTask('coveralls', ['mkdir', 'mochacov:test', 'mochacov:coveralls']);
   grunt.registerTask('default', ['verify', 'coverage']);
 };

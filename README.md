@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/openhoat/hw-logger.png?branch=master)](https://travis-ci.org/openhoat/hw-logger)
 [![NPM version](https://badge.fury.io/js/hw-logger.svg)](http://badge.fury.io/js/hw-logger)
+[![Coverage Status](https://coveralls.io/repos/openhoat/hw-logger/badge.svg)](https://coveralls.io/r/openhoat/hw-logger)
 
 ## hw-logger
 
