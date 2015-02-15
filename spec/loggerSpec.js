@@ -142,6 +142,69 @@ describe('hw-logger', function () {
 
   });
 
+  describe('debug log config from environment', function () {
+
+    before(function () {
+      process.env['HW_LOG_LEVEL'] = 'debug';
+      logData = {};
+      eventEmitter = new events.EventEmitter();
+      logger.init({
+        format: logFormat,
+        out: eventEmitter
+      });
+      eventEmitter.on('data', function (data) {
+        logData.buffer += data;
+        logData.last = data;
+      });
+    });
+
+    after(function () {
+      delete process.env['HW_LOG_LEVEL'];
+      eventEmitter.removeAllListeners('data');
+    });
+
+    beforeEach(function () {
+      logData.buffer = '';
+      logData.last = null;
+    });
+
+    it('should log an info message from environment', function () {
+      var level = 'INFO'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, msg);
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
+    });
+
+    it('should log an error message from environment', function () {
+      var level = 'ERROR'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, msg);
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
+    });
+
+    it('should log a warn message from environment', function () {
+      var level = 'WARN'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, msg);
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
+    });
+
+    it('should log a debug message from environment', function () {
+      var level = 'DEBUG'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, msg);
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
+    });
+
+    it('should not log a trace message from environment', function () {
+      var level = 'TRACE'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, msg);
+      expect(logData.last).to.not.be.ok;
+    });
+
+  });
+
   describe('error log config', function () {
 
     before(function () {
