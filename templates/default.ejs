@@ -4,8 +4,8 @@ colors = {
   ERROR: 'red',
   WARN:  'yellow',
   INFO:  'blue',
-  DEBUG: 'white.bgBlack',
-  TRACE: 'inverse'
+  DEBUG: 'green',
+  TRACE: 'cyan'
 };
 style = (colors[data.level] || 'white').split('.').reduce(function (prev, cur) {
   return prev[cur];
