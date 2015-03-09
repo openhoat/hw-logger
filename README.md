@@ -23,7 +23,7 @@ npm install hw-logger
 
 ### Getting started
 
-#### Simply use log object to do the job : [example/simple.js](https://github.com/openhoat/hw-logger/blob/master/examples/simple.js)
+#### Simply use log object to do the job : [samples/simple.js](https://github.com/openhoat/hw-logger/blob/master/samples/simple.js)
 
 ```javascript
 var log = require('hw-logger').log;
@@ -35,7 +35,7 @@ log.error('ouch');
 
 Output :
 
-    $ node examples/simple
+    $ node samples/simple
     INFO  - simple:3 - 0ms - hey!
     ERROR - simple:5 - 1ms - ouch
 
@@ -44,18 +44,17 @@ To get those informations hw-logger need to know the caller and this process is 
 
 Override log level with environment variable :
 
-    $ HW_LOG_LEVEL=debug node examples/simple
+    $ HW_LOG_LEVEL=debug node samples/simple
     INFO  - simple:3 - 4ms - hey!
     DEBUG - simple:4 - 2ms - does nothing
     ERROR - simple:5 - 0ms - ouch
 
 Trace level also display log config at initialization :
 
-    $ HW_LOG_LEVEL=trace node examples/simple
+    $ HW_LOG_LEVEL=trace node samples/simple
     TRACE - logger:97 - 4ms - log config : { levels: { NONE: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4, TRACE: 5, ALL: 6 },
       formatFile: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs',
       level: 'TRACE',
-      colors: true,
       ejs: { filename: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs' },
       out: [Function],
       caller: true,
@@ -68,12 +67,12 @@ Trace level also display log config at initialization :
 
 Usual NODE_ENV environment variable is detected to override default log level with error only (useful on production systems) :
 
-    $ NODE_ENV=production node examples/simple
+    $ NODE_ENV=production node samples/simple
     ERROR - simple:5 - 4ms - ouch
 
 Tips : if HW_LOG_LEVEL and NODE_ENV are both defined, HW_LOG_LEVEL has priority
 
-#### Use logger object to configure and change level : [example/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/changeLevel.js)
+#### Use logger object to configure and change level : [samples/changeLevel.js](https://github.com/openhoat/hw-logger/blob/master/samples/changeLevel.js)
 
 ```javascript
 var logger = require('hw-logger');
@@ -91,7 +90,7 @@ log.trace('tssss');
 
 Output :
 
-    $ node examples/changeLevel
+    $ node samples/changeLevel
     INFO  - changeLevel:6 - 0ms - hey!
     ERROR - changeLevel:7 - 1ms - ouch!
     DEBUG - changeLevel:8 - 1ms - bug bug
@@ -130,7 +129,7 @@ Available options :
 ```javascript
 {
   caller,       // (boolean) if true (default), insert caller data
-  colors,       // (boolean) if true, enable colors if supported
+  colors,       // (boolean) if true, enable colors if supported (enabled by default for tty)
   ejs,          // (object) EJS options (see https://www.npmjs.com/package/ejs#options)
   format,       // (string|function) log format template string or result of function
   formatFile,   // (string) log format template file, overrides format if defined
@@ -208,7 +207,7 @@ Each log event rendering is based on a data object with useful informations :
 
 ### Use cases
 
-#### Custom level : [example/customLevel.js](https://github.com/openhoat/hw-logger/blob/master/examples/customLevel.js)
+#### Custom level : [samples/customLevel.js](https://github.com/openhoat/hw-logger/blob/master/samples/customLevel.js)
 
 ```javascript
 var logger = require('hw-logger')
@@ -240,13 +239,13 @@ log.fedUp('boring again'); // now it should display
 
 Output :
 
-    $ node examples/customLevel
+    $ node samples/customLevel
     IMPORTANT - customLevel:15 - 4ms - hello world!
     ERROR     - customLevel:17 - 2ms - ouch
     [ 'NONE', 'ERROR', 'WARN', 'IMPORTANT', 'INFO', 'DEBUG', 'TRACE', 'FED_UP', 'ALL' ]
     FED_UP    - customLevel:25 - 1ms - boring again
 
-#### Custom format : [example/customFormat.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormat.js)
+#### Custom format : [samples/customFormat.js](https://github.com/openhoat/hw-logger/blob/master/samples/customFormat.js)
 
 ```javascript
 var logger = require('hw-logger')
@@ -268,13 +267,13 @@ log.error('ouch');
 
 Output :
 
-    $ node examples/customFormat
+    $ node samples/customFormat
     LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : hello world!
     LOG EVENT @ Tue Feb 03 2015 14:19:35 GMT+0100 : ouch
 
-To use a template file, use formatFile option instead of format option (template [examples](https://github.com/openhoat/hw-logger/tree/master/templates)).
+To use a template file, use formatFile option instead of format option ([template examples](https://github.com/openhoat/hw-logger/tree/master/templates)).
 
-#### Custom format function : [example/customFormatFunc.js](https://github.com/openhoat/hw-logger/blob/master/examples/customFormatFunc.js)
+#### Custom format function : [samples/customFormatFunc.js](https://github.com/openhoat/hw-logger/blob/master/samples/customFormatFunc.js)
 
 ```javascript
 var util = require('util')
@@ -296,11 +295,11 @@ log.error('ouch');
 
 Output :
 
-    $ node examples/customFormatFunc
+    $ node samples/customFormatFunc
     custom format - INFO : hello %s!, world
     custom format - ERROR : ouch
 
-#### Replace express logger : [example/express.js](https://github.com/openhoat/hw-logger/blob/master/examples/express.js)
+#### Replace express logger : [samples/express.js](https://github.com/openhoat/hw-logger/blob/master/samples/express.js)
 
 Just register the express middleware before your routes (and after logger.init) :
 
@@ -322,7 +321,7 @@ app.listen(3000, function () {
 
 Output :
 
-    $ node examples/express.js &
+    $ node samples/express.js &
     INFO  - express:13 - 81ms - Http server ready
 
     $ curl localhost:3000/hello
@@ -341,7 +340,7 @@ Express log message format :
 
 Specify any handler based on an [event emitter](http://nodejs.org/api/events.html), a function, a [writable stream](http://nodejs.org/api/stream.html#stream_class_stream_writable), or a file to handle all log messages.
 
-##### Event emitter : [example/outEventEmitter.js](https://github.com/openhoat/hw-logger/blob/master/examples/outEventEmitter.js)
+##### Event emitter : [samples/outEventEmitter.js](https://github.com/openhoat/hw-logger/blob/master/samples/outEventEmitter.js)
 
 Each log message is a provided through 'data' event.
 
@@ -364,10 +363,10 @@ log.info('handle this!'); // Display nothing
 
 Output :
 
-    $ node examples/outEventEmitter
+    $ node samples/outEventEmitter
     data : INFO  - out:14 - 5ms - handle this!
 
-##### Stream : [example/outStream.js](https://github.com/openhoat/hw-logger/blob/master/examples/outStream.js)
+##### Stream : [samples/outStream.js](https://github.com/openhoat/hw-logger/blob/master/samples/outStream.js)
 
 The logger writes log messages asynchronously, so to be sure to be able to read data you can flush the logger.
 
@@ -393,10 +392,10 @@ logger.flush(done);
 
 Output :
 
-    $ node examples/outStream.js
+    $ node samples/outStream.js
     INFO  - outStream:13 - 6ms - stream data!
 
-##### File : [example/outFile.js](https://github.com/openhoat/hw-logger/blob/master/examples/outFile.js)
+##### File : [samples/outFile.js](https://github.com/openhoat/hw-logger/blob/master/samples/outFile.js)
 
 The logger uses an interal stream, and writes log messages asynchronously into it, so use flush to be sure data are effectively written in file.
 
@@ -422,10 +421,10 @@ logger.flush(done);
 
 Output :
 
-    $ node examples/outFile.js
+    $ node samples/outFile.js
     INFO  - outFile:13 - 6ms - file content!
 
-##### Function handler : [example/outFunc.js](https://github.com/openhoat/hw-logger/blob/master/examples/outFunc.js)
+##### Function handler : [samples/outFunc.js](https://github.com/openhoat/hw-logger/blob/master/samples/outFunc.js)
 
 Use any function to handle log messages.
 
@@ -446,7 +445,7 @@ log.info('file content!'); // Display nothing
 
 Output :
 
-    $ node examples/outFunc.js
+    $ node samples/outFunc.js
     INFO  - outFunc:14 - 5ms - file content!
 
 ### Performances

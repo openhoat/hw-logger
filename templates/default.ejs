@@ -1,15 +1,17 @@
 <%
-var colorMethods, colorMethod, level;
-colorMethods = {
+var colors, style, level;
+colors = {
   ERROR: 'red',
   WARN:  'yellow',
   INFO:  'blue',
-  DEBUG: 'bgBlack',
+  DEBUG: 'white.bgBlack',
   TRACE: 'inverse'
 };
-colorMethod = colorMethods[data.level] || 'white';
+style = (colors[data.level] || 'white').split('.').reduce(function (prev, cur) {
+  return prev[cur];
+}, chalk);
 level = (data.level + new Array(config.levelsMaxLength + 1).join(' ')).slice(0, config.levelsMaxLength);
-%><%- chalk.bold[colorMethod](level) %> - <%
+%><%- style.bold(level) %> - <%
 if (data.caller) {
 %><%- chalk.magenta(util.format('%s:%s', path.basename(data.caller.file, '.js'), data.caller.line)) %> - <%
 } %><%- data.lastTime ? (function(duration) {
