@@ -205,6 +205,51 @@ describe('hw-logger', function () {
 
   });
 
+  describe('use arg function', function () {
+
+    before(function () {
+      logData = {};
+      eventEmitter = new events.EventEmitter();
+      logger.init({
+        format: logFormat,
+        out: eventEmitter,
+        useArgFunction: true
+      });
+      eventEmitter.on('data', function (data) {
+        logData.buffer += data;
+        logData.last = data;
+      });
+    });
+
+    after(function () {
+      eventEmitter.removeAllListeners('data');
+    });
+
+    beforeEach(function () {
+      logData.buffer = '';
+      logData.last = null;
+    });
+
+    it('should call arg function', function () {
+      var level = 'INFO'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, function () {
+        return msg;
+      });
+      expect(logData.last).to.equal(util.format('%s - %s\n', level, msg));
+    });
+
+    it('should not call arg function', function () {
+      var level = 'TRACE'
+        , msg = 'hello';
+      log[logger.getLogMethodName(level)].call(null, function () {
+        return msg;
+      });
+      expect(logData.last).to.not.be.ok;
+    });
+
+  });
+
   describe('error log config', function () {
 
     before(function () {
