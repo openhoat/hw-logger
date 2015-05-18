@@ -132,7 +132,7 @@ Available options :
   colors,       // (boolean) if true, enable colors if supported (enabled by default for tty)
   ejs,          // (object) EJS options (see https://www.npmjs.com/package/ejs#options)
   format,       // (string|function) log format template string or result of function
-  formatFile,   // (string) log format template file, overrides format if defined
+  formatFile,   // (string) log format template file, overrides format if defined, default base dir is templates and default extension is .ejs
   levels,       // (object) registered levels map (key : name, value : level value)
   out           // (object) defines where to send log messages (call a function, use an [events.EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter), a writable stream or a file)
 }
