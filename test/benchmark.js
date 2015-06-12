@@ -1,6 +1,7 @@
 'use strict';
 
 var write = process.stdout.write
+  , _=require('lodash')
   , g = require('idle-gc')
   , Promise = require('bluebird')
   , logger = require('../lib/logger')
@@ -16,9 +17,6 @@ var write = process.stdout.write
 
 function out() {
   write.apply(process.stdout, arguments);
-}
-
-function noop() {
 }
 
 function randString(x) {
@@ -63,11 +61,11 @@ console.log('Benchmarking %s iterations of random string logging using : %s',
     .join(',')
 );
 
-process.stdout.write = noop;
+process.stdout.write = _.noop;
 
 logger.init({
-  format: noop,
-  out: noop,
+  format: _.noop,
+  out: _.noop,
   caller: false
 });
 
