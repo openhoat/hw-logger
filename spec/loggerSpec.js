@@ -459,9 +459,10 @@ describe('hw-logger', function () {
     });
 
 
-    it('should set log levels with an array', function () {
+    it.only('should set log levels with an array', function () {
       var levels;
       logger.init({levels: ['ERROR', 'WARN', 'HTTP', 'INFO', 'DEBUG', 'TRACE']});
+      expect(logger.getLevelsMaxLength()).to.equal('ERROR'.length);
       levels = logger.getLevels();
       levels.forEach(function (level, index) {
         expect(logger.getLevelValue(level)).to.equal(index === levels.length-1 ? Number.MAX_VALUE : index);
