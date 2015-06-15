@@ -465,7 +465,7 @@ describe('hw-logger', function () {
       expect(logger.getLevelsMaxLength()).to.equal('ERROR'.length);
       levels = logger.getLevels();
       levels.forEach(function (level, index) {
-        expect(logger.getLevelValue(level)).to.equal(index === levels.length-1 ? Number.MAX_VALUE : index);
+        expect(logger.getLevelValue(level)).to.equal(index === levels.length - 1 ? Number.MAX_VALUE : index);
       });
     });
 
@@ -548,6 +548,7 @@ describe('hw-logger', function () {
 
     it('should show express logs', function () {
       var requestAsync = Promise.promisify(request);
+      logger.setLevel('http');
       return requestAsync(
         {
           url: util.format('http://unix:%s:%s', socketFile, '/hello')
