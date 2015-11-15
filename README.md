@@ -53,9 +53,9 @@ Trace level also display log config at initialization :
 
     $ HW_LOG_LEVEL=trace node samples/simple
     TRACE - logger:97 - 4ms - log config : { levels: { NONE: 0, ERROR: 1, WARN: 2, INFO: 3, DEBUG: 4, TRACE: 5, ALL: 6 },
-      formatFile: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs',
+      formatFile: '/home/openhoat/dev/nodejs/hw-logger/templates/default.tpl',
       level: 'TRACE',
-      ejs: { filename: '/home/openhoat/dev/nodejs/hw-logger/templates/default.ejs' },
+      template: { filename: '/home/openhoat/dev/nodejs/hw-logger/templates/default.tpl' },
       out: [Function],
       caller: true,
       format: '<%\nvar colorMethods, colorMethod, level;\ncolorMethods = {\n  ERROR: \'red\',\n  WARN:  \'yellow\',\n  INFO:  \'blue\',\n  DEBUG: \'bgBlack\',\n  TRACE: \'inverse\'\n};\ncolorMethod = colorMethods[data.level] || \'white\';\nlevel = (data.level + new Array(config.levelsMaxLength + 1).join(\' \')).slice(0, config.levelsMaxLength);\n%><%- chalk.bold[colorMethod](level) %> - <%\nif (data.caller) {\n%><%- chalk.magenta(util.format(\'%s:%s\', path.basename(data.caller.file, \'.js\'), data.caller.line)) %> - <%\n} %><%- data.lastTime ? (function(duration) {\n  return duration > 1000 ? Math.round(duration / 100) / 10 + \'s\' : duration + \'ms\';\n})(data.time.diff(data.lastTime)) : \'0ms\' %> - <%- util.format.apply(null, data.args) %>',
@@ -130,9 +130,9 @@ Available options :
 {
   caller,       // (boolean) if true (default), insert caller data
   colors,       // (boolean) if true, enable colors if supported (enabled by default for tty)
-  ejs,          // (object) EJS options (see https://www.npmjs.com/package/ejs#options)
+  template,     // (object) EJS options (see https://lodash.com/docs#template)
   format,       // (string|function) log format template string or result of function
-  formatFile,   // (string) log format template file, overrides format if defined, default base dir is templates and default extension is .ejs
+  formatFile,   // (string) log format template file, overrides format if defined, default base dir is templates and default extension is .tpl
   levels,       // (object) registered levels map (key : name, value : level value)
   out           // (object) defines where to send log messages (call a function, use an [events.EventEmitter](http://nodejs.org/api/events.html#events_class_events_eventemitter), a writable stream or a file)
 }
@@ -254,7 +254,7 @@ var logger = require('hw-logger')
 logger.init({
   format: "LOG EVENT @ <%- data.time %> : <%- util.format.apply(null, data.args) %>"
   /**
-   * EJS template format (see https://www.npmjs.com/package/ejs)
+   * EJS template format (see https://www.npmjs.com/package/lodash.template)
    * Use data object to get log event details (see https://github.com/openhoat/hw-logger#log-format-data)
    * Other objects available in template : chalk (for colors), util, path, config (logger config)
    */

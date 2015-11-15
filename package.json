@@ -1,6 +1,6 @@
 {
   "name": "hw-logger",
-  "version": "1.1.9",
+  "version": "1.1.10",
   "description": "Efficient logger for node",
   "main": "lib/logger.js",
   "author": "Olivier Penhoat <openhoat@gmail.com> (http://headwood.net/)",
@@ -35,8 +35,8 @@
   },
   "dependencies": {
     "chalk": "0.5.1",
-    "ejs": "2.2.3",
-    "lodash": "3.0.1",
+    "lodash": "^3.10.1",
+    "lodash.template": "^3.6.2",
     "moment": "2.9.0",
     "on-finished": "2.2.0",
     "stack-trace": "0.0.9"
