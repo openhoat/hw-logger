@@ -1,8 +1,7 @@
 'use strict';
 
 var write = process.stdout.write
-  , _=require('lodash')
-  , g = require('idle-gc')
+  , _ = require('lodash')
   , Promise = require('bluebird')
   , logger = require('../lib/logger')
   , log = logger.log
@@ -73,7 +72,9 @@ log4js.loadAppender('console');
 
 new Promise(
   function (resolve) {
-    g.start(500);
+    if (typeof global.gc === 'function') {
+      global.gc();
+    }
     resolve();
   })
   .then(function () {
@@ -97,7 +98,6 @@ new Promise(
     return bench(bunyanLogger, 'info');
   })
   .finally(function () {
-    g.stop();
     process.stdout.write = write;
   })
   .then(function () {

@@ -1,0 +1,7 @@
+#!/bin/bash
+
+THIS_SCRIPT_DIR=$(cd $(dirname $0)/.. && pwd)
+
+cd ${THIS_SCRIPT_DIR} > /dev/null
+
+node --expose-gc test/benchmark

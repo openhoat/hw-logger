@@ -547,7 +547,7 @@ describe('hw-logger', function () {
     });
 
     it('should show express logs', function () {
-      var requestAsync = Promise.promisify(request);
+      var requestAsync = Promise.promisify(request, {multiArgs: true});
       logger.setLevel('http');
       return requestAsync(
         {
@@ -556,7 +556,8 @@ describe('hw-logger', function () {
         .spread(function (res) {
           expect(res.statusCode).to.equal(200);
           expect(logData.last).to.equal('HTTP - undefined - GET /hello - 200 - 12\n');
-        }).then(function () {
+        })
+        .then(function () {
           return requestAsync({url: util.format('http://unix:%s:%s', socketFile, '/world')});
         })
         .spread(function (res) {
