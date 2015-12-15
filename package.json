@@ -1,6 +1,6 @@
 {
   "name": "hw-logger",
-  "version": "1.1.14",
+  "version": "1.1.15",
   "description": "Efficient logger for node",
   "main": "lib/logger.js",
   "author": "Olivier Penhoat <openhoat@gmail.com> (http://headwood.net/)",
@@ -21,18 +21,6 @@
     "node": ">=0.12.0"
   },
   "license": "MIT",
-  "config": {
-    "blanket": {
-      "pattern": [
-        "lib"
-      ],
-      "data-cover-never": [
-        "samples",
-        "node_modules",
-        "test"
-      ]
-    }
-  },
   "dependencies": {
     "chalk": "^1.1.1",
     "lodash": "^3.10.1",
