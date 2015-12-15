@@ -1,1 +1,1 @@
-<%- chalk.gray(data.time.format("DD/MM/YYYY HH:mm:ss")) %> - <%- include('default') %>
+<%= chalk.gray(data.time.format("DD/MM/YYYY HH:mm:ss")) %> - <%= include('default') %>

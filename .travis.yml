@@ -4,10 +4,10 @@ node_js:
   - 0.10
 
 before_script:
-  - "npm i -g mocha grunt-cli"
+  - "npm i -g gulp-cli"
 
 script:
-  - "grunt test"
+  - "gulp test"
 
 after_script:
-  - "grunt coveralls"
+  - "gulp coveralls"
