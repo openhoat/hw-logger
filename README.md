@@ -470,26 +470,19 @@ Output :
 
 Prerequisite :
 
-    $ npm install -g grunt-cli
+    $ npm install -g gulp-cli
 
 #### Run tests
 
-    $ grunt test
+    $ gulp test
 
 #### Test coverage
 
-    $ grunt coverage
-    $ xdg-open dist/reports/coverage.html
+    $ gulp coverage
+    $ xdg-open dist/reports/coverage/html/coverage.html
 
 #### Code quality
 
-    $ grunt verify
-
-#### Default build
-
-Does test, coverage and verify
-
-    $ grunt
-
+    $ gulp lint
 
 Enjoy !
