@@ -5,5 +5,5 @@ test
 tmp
 .gitignore
 .travis.yml
-Gruntfile.js
-jshint.json
+gulpfile.js
+.jshintrc
