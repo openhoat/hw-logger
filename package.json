@@ -23,7 +23,7 @@
   "license": "MIT",
   "dependencies": {
     "chalk": "^1.1.1",
-    "lodash": "^3.10.1",
+    "lodash": "^4.17.5",
     "lodash.template": "^3.6.2",
     "moment": "^2.10.6",
     "on-finished": "^2.3.0",
